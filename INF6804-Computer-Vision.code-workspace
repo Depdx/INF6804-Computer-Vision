@@ -11,6 +11,8 @@
         "cSpell.words": [
             "graycomatrix",
             "imread",
+            "imshow",
+            "multiblock",
             "skimage",
             "venv"
         ]
