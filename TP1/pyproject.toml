@@ -12,6 +12,7 @@ notebook = "^7.0.6"
 ipykernel = "^6.29.0"
 scikit-image = "^0.22.0"
 matplotlib = "^3.8.2"
+tqdm = "^4.66.1"
 
 
 [build-system]
