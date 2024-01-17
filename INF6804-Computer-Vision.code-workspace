@@ -7,5 +7,12 @@
 			"path": "TP1"
 		}
 	],
-    "settings": {}
+    "settings": {
+        "cSpell.words": [
+            "graycomatrix",
+            "imread",
+            "skimage",
+            "venv"
+        ]
+    }
 }
