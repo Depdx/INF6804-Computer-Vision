@@ -12,7 +12,9 @@
             "graycomatrix",
             "imread",
             "imshow",
+            "linalg",
             "multiblock",
+            "ndarray",
             "skimage",
             "venv"
         ]

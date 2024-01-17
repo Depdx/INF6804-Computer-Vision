@@ -1,0 +1,56 @@
+import skimage
+import typing
+import numpy as np
+
+
+class CoOccurenceMatrix:
+    def __init__(
+        self,
+        distances: [int],
+        angles: [float],
+        levels: int,
+        channel: typing.Literal[
+            "grey",
+            "red",
+            "green",
+            "blue",
+        ],
+    ) -> None:
+        self.distances = distances
+        self.angles = angles
+        self.levels = levels
+        self.channel = channel
+
+    def __call__(self, image: np.ndarray):
+        if "grey" in self.channel:
+            if len(image.shape) >= 3:
+                image = skimage.color.rgb2gray(image)
+                image = skimage.img_as_ubyte(image)
+
+            image = image // (256 // self.levels)
+            return skimage.feature.graycomatrix(
+                image,
+                self.distances,
+                self.angles,
+                self.levels,
+                normed=True,
+            )
+
+        if "red" in self.channel:
+            image = image[:, :, 0]
+
+        if "green" in self.channel:
+            image = image[:, :, 1]
+
+        if "blue" in self.channel:
+            image = image[:, :, 2]
+
+        image = image // (256 // self.levels)
+
+        return skimage.feature.graycomatrix(
+            image,
+            self.distances,
+            self.angles,
+            self.levels,
+            normed=True,
+        )
