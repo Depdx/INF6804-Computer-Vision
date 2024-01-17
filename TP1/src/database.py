@@ -4,13 +4,14 @@ import functools
 
 
 class Database:
-    def __init__(self, directory: str):
+    def __init__(
+        self,
+        directory: str,
+        feature_extractor: callable,
+        descriptor: callable,
+    ):
         self.directory = directory
         self.files = os.listdir(directory)
-        self.feature_extractor = None
-        self.descriptor = None
-
-    def set_feature_extractor(self, feature_extractor: callable, descriptor: callable):
         self.feature_extractor = feature_extractor
         self.descriptor = descriptor
 
@@ -23,7 +24,7 @@ class Database:
         ]
 
         return sorted(
-            zip(similarities, self.get_images(), images_features),
+            zip(similarities, self.get_images(), images_features, self.files),
             key=lambda x: x[0],
             reverse=True,
         )[:k]
