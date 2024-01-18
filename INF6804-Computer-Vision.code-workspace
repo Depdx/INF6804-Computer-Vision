@@ -9,6 +9,8 @@
 	],
     "settings": {
         "cSpell.words": [
+            "arange",
+            "dotenv",
             "graycomatrix",
             "imread",
             "imshow",
@@ -16,7 +18,8 @@
             "multiblock",
             "ndarray",
             "skimage",
-            "venv"
+            "venv",
+            "wanb"
         ]
     }
 }
