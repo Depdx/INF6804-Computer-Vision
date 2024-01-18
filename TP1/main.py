@@ -32,8 +32,9 @@ for similarity, image, features, file in results:
 
 # grid search
 # implementation couleur pour co-occurence matrix
-# implementation autres similarités
+
 # Autmatic topk-accuracy
+
 # add timer (generate database, query, timer de toutes les étapes)
 # add wandb
 # add visualisation des résultats
