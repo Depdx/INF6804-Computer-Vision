@@ -4,7 +4,7 @@ A module for representing a database of images for similarity search.
 from functools import lru_cache
 from os import listdir
 from skimage.io import imread
-
+from tqdm import tqdm
 
 class Database:
     """
@@ -71,7 +71,7 @@ class Database:
         assert self.feature_extractor is not None
         assert self.descriptor is not None
         images_features = []
-        for file in self.files:
+        for file in tqdm(self.files, desc="Processing database files"):
             image = imread(f"{self.directory}/{file}")
             images_features.append(self.descriptor(self.feature_extractor(image)))
         return images_features
