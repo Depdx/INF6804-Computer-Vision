@@ -10,6 +10,7 @@
     "settings": {
         "cSpell.words": [
             "arange",
+            "Bhattacharyya",
             "dotenv",
             "graycomatrix",
             "imread",

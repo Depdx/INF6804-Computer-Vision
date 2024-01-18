@@ -3,9 +3,10 @@ Cosine similarity measure.
 """
 from numpy import ndarray, dot
 from numpy.linalg import norm
+from src.similarities.similarity import Similarity
 
 
-class CosineSimilarity:
+class CosineSimilarity(Similarity):
     """
     Computes the cosine similarity between two vectors.
     """
@@ -23,7 +24,7 @@ class CosineSimilarity:
         """
         self.is_distance = is_distance
 
-    def __call__(self, x: ndarray, y: ndarray):
+    def __call__(self, x: ndarray, y: ndarray) -> float:
         """
         Calculates the cosine similarity between two vectors.
 
