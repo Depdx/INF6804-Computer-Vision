@@ -9,6 +9,9 @@
 	],
     "settings": {
         "cSpell.words": [
+            "arange",
+            "Bhattacharyya",
+            "dotenv",
             "graycomatrix",
             "imread",
             "imshow",
@@ -16,7 +19,8 @@
             "multiblock",
             "ndarray",
             "skimage",
-            "venv"
+            "venv",
+            "wanb"
         ]
     }
 }

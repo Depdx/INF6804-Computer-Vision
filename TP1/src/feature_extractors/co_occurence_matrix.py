@@ -1,6 +1,8 @@
-import skimage
 import typing
 import numpy as np
+from skimage.feature import greycomatrix
+from skimage import img_as_ubyte
+from skimage.color import rgb2gray
 
 
 class CoOccurenceMatrix:
@@ -18,11 +20,19 @@ class CoOccurenceMatrix:
             ],
     ) -> None:
         """
-        :param distances: Distance between pair pixels
-        :param angles: Angle between pair pixels
-        :param levels: Number of levels for each pixel given by 2**levels
-        :param channel: Which channel to use for the co-occurence matrix must be one of ["grey", "red", "green", "blue", "every"]
+        Class for computing the co-occurrence matrix of an image.
+
+        Args:
+            distances (List[int]): List of pixel distances for co-occurrence matrix computation.
+            angles (List[float]): List of angles (in radians) for co-occurrence matrix computation.
+            levels (int): Number of gray levels for quantization.
+            channel (Literal["grey", "red", "green", "blue"]): Channel(s) to compute the co-occurrence matrix on.
+
+        Returns:
+            np.ndarray: The computed co-occurrence matrix.
+
         """
+
         self.distances = distances
         self.angles = angles
         self.levels = levels
@@ -40,7 +50,7 @@ class CoOccurenceMatrix:
             one_channel_image += 2 ** (self.levels // 3) * image[:, :, 1]  # G
             one_channel_image += image[:, :, 2]  # B
 
-            return skimage.feature.graycomatrix(
+            return greycomatrix(
                 one_channel_image,
                 self.distances,
                 self.angles,
@@ -52,11 +62,11 @@ class CoOccurenceMatrix:
 
             # If the image is not grey
             if len(image.shape) >= 3:
-                image = skimage.color.rgb2gray(image)
-                image = skimage.img_as_ubyte(image)
+                image = rgb2gray(image)
+                image = img_as_ubyte(image)
 
             image = image // 2 ** (8 - self.levels)
-            return skimage.feature.graycomatrix(
+            return greycomatrix(
                 image,
                 self.distances,
                 self.angles,
@@ -74,10 +84,11 @@ class CoOccurenceMatrix:
             image = image[:, :, channels[self.channel]]
             image = image // 2 ** (8 - self.levels)
 
-            return skimage.feature.graycomatrix(
+            return greycomatrix(
                 image,
                 self.distances,
                 self.angles,
                 self.levels,
                 normed=True,
             )
+
