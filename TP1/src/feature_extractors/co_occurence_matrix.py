@@ -1,6 +1,6 @@
 import typing
 import numpy as np
-from skimage.feature import greycomatrix
+from skimage.feature import graycomatrix
 from skimage import img_as_ubyte
 from skimage.color import rgb2gray
 
@@ -50,11 +50,11 @@ class CoOccurenceMatrix:
             one_channel_image += 2 ** (self.levels // 3) * image[:, :, 1]  # G
             one_channel_image += image[:, :, 2]  # B
 
-            return greycomatrix(
+            return graycomatrix(
                 one_channel_image,
                 self.distances,
                 self.angles,
-                self.levels,
+                2**self.levels,
                 normed=True,
             )
 
@@ -66,11 +66,11 @@ class CoOccurenceMatrix:
                 image = img_as_ubyte(image)
 
             image = image // 2 ** (8 - self.levels)
-            return greycomatrix(
+            return graycomatrix(
                 image,
                 self.distances,
                 self.angles,
-                self.levels,
+                2**self.levels,
                 normed=True,
             )
         else:
@@ -81,14 +81,15 @@ class CoOccurenceMatrix:
             }
 
             # Select the correct channel
-            image = image[:, :, channels[self.channel]]
+            if len(image.shape) >= 3:
+                image = image[:, :, channels[self.channel]]
             image = image // 2 ** (8 - self.levels)
 
-            return greycomatrix(
+            return graycomatrix(
                 image,
                 self.distances,
                 self.angles,
-                self.levels,
+                2**self.levels,
                 normed=True,
             )
 
