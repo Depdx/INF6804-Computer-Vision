@@ -5,7 +5,7 @@ from os import getenv
 from dotenv import load_dotenv
 
 
-class Environment:
+class _Environment:
     """
     Represents the environment configuration.
 
@@ -16,3 +16,6 @@ class Environment:
     def __init__(self):
         load_dotenv(".env")
         self.wanb_api_key = getenv("WANDB_API_KEY")
+
+
+Environment = _Environment()
