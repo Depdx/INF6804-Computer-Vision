@@ -5,19 +5,13 @@ from skimage import img_as_ubyte
 from skimage.color import rgb2gray
 
 
-class CoOccurenceMatrix:
+class CoOccurrenceMatrix:
     def __init__(
-            self,
-            distances: [int],
-            angles: [float],
-            levels: int,
-            channel: typing.Literal[
-                "grey",
-                "red",
-                "green",
-                "blue",
-                "every"
-            ],
+        self,
+        distances: [int],
+        angles: [float],
+        levels: int,
+        channel: typing.Literal["grey", "red", "green", "blue", "every"],
     ) -> None:
         """
         Class for computing the co-occurrence matrix of an image.
@@ -39,7 +33,6 @@ class CoOccurenceMatrix:
         self.channel = channel
 
     def __call__(self, image: np.ndarray):
-
         if "every" in self.channel:
             assert len(image.shape) >= 3
             assert self.levels % 3 == 0
@@ -59,7 +52,6 @@ class CoOccurenceMatrix:
             )
 
         elif "grey" in self.channel:
-
             # If the image is not grey
             if len(image.shape) >= 3:
                 image = rgb2gray(image)
@@ -92,4 +84,3 @@ class CoOccurenceMatrix:
                 2**self.levels,
                 normed=True,
             )
-
