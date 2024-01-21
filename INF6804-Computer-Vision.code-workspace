@@ -10,6 +10,7 @@
     "settings": {
         "cSpell.words": [
             "arange",
+            "autonotebook",
             "Bhattacharyya",
             "dotenv",
             "graycomatrix",
@@ -19,6 +20,7 @@
             "multiblock",
             "ndarray",
             "skimage",
+            "tqdm",
             "venv",
             "wanb"
         ]
