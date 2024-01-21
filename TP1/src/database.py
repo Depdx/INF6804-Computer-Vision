@@ -4,7 +4,9 @@ A module for representing a database of images for similarity search.
 from functools import lru_cache
 from os import listdir
 from skimage.io import imread
-from tqdm import tqdm
+from tqdm.autonotebook import tqdm
+from src.decorators.performance_counter_decorator import performance_counter
+
 
 class Database:
     """
@@ -25,13 +27,22 @@ class Database:
     def __init__(
         self,
         directory: str,
-        feature_extractor: callable,
-        descriptor: callable,
+        feature_extractor: callable = None,
+        descriptor: callable = None,
     ):
+        assert feature_extractor is not None
+        assert descriptor is not None
         self.directory = directory
         self.files = listdir(directory)
         self.feature_extractor = feature_extractor
         self.descriptor = descriptor
+
+    @performance_counter(metric_name="ImageProcessing")
+    def process(self, image):
+        """
+        Process an image and return its descriptor.
+        """
+        return self.descriptor(self.feature_extractor(image))
 
     def query(self, query, similarity_measure: callable, k: int):
         """
@@ -48,7 +59,7 @@ class Database:
                 similarity score, image, image features, and file name.
         """
         images_features = self.get_images_features()
-        query_features = self.descriptor(self.feature_extractor(query))
+        query_features = self.process(query)
         similarities = [
             similarity_measure(query_features, image_features)
             for image_features in images_features
@@ -68,12 +79,10 @@ class Database:
         Returns:
             list: A list of image features.
         """
-        assert self.feature_extractor is not None
-        assert self.descriptor is not None
         images_features = []
         for file in tqdm(self.files, desc="Processing database files"):
             image = imread(f"{self.directory}/{file}")
-            images_features.append(self.descriptor(self.feature_extractor(image)))
+            images_features.append(self.process(image))
         return images_features
 
     def get_images(self):
