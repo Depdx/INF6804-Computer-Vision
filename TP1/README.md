@@ -1,3 +1,17 @@
+# Table of Contents
+
+- [Installation](#installation)
+  - [Prerequisites](#prerequisites)
+    - [Create The virtual environment](#create-the-virtual-environment)
+  - [Install Dependencies](#install-dependencies)
+  - [Add Dependencies](#add-dependencies)
+  - [Run the Application](#run-the-application)
+    - [CLI](#cli)
+    - [Notebook kernel](#notebook-kernel)
+- [Managing `.env` Environment](#managing-env-environment)
+    - [Create a new environment](#create-a-new-environment)
+
+
 # Installation
 
 ## Prerequisites
@@ -48,4 +62,10 @@ You can see all poetry environments with the following command.
 poetry env list
 ```
 
-# Run Tests
+# Managing `.env` Environment
+
+## Create a new environment
+
+1. create a new file `.env` at the root of the project
+2. add the environment variables in the file from the file `.env.example.md`
+
