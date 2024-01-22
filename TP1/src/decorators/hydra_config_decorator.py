@@ -9,7 +9,7 @@ from hydra.core.config_store import ConfigStore
 from src.utils.text_utils import TextUtils
 
 
-def hydra_config(*, group: str, name: Optional[str] = None):
+def hydra_config(*, group: Optional[str] = None, name: Optional[str] = None):
     """
     Decorator function for registering a class with Hydra's ConfigStore.
 

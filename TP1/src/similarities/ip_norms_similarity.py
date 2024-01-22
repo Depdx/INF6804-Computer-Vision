@@ -32,7 +32,7 @@ class IPNormsSimilarity(Similarity):
     - float: The similarity score between the two vectors.
     """
 
-    def __init__(self, p: int):
+    def __init__(self, *, p: int):
         self.p = p
 
     def __call__(self, x: ndarray, y: ndarray) -> float:

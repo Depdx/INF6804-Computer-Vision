@@ -55,6 +55,7 @@ class CoOccurrenceMatrix(FeatureExtractor):
 
     def __init__(
         self,
+        *,
         distances: [int],
         angles: [float],
         levels: int,

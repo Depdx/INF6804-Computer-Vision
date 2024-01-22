@@ -50,6 +50,7 @@ class LocalBinaryPattern(FeatureExtractor):
 
     def __init__(
         self,
+        *,
         n_points: int,
         radius: float,
         method: MethodEnum,

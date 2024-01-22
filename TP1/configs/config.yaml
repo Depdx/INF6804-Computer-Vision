@@ -1,6 +1,9 @@
 defaults: 
+  - _self_
   - feature_extractor : local_binary_pattern
   - descriptor : histogram
   - similarity: cosine_similarity
-  - _self_
 
+database_path: ./data/database
+query_path: ./data
+top_k: 3
