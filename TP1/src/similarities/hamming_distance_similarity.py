@@ -3,9 +3,21 @@ Hamming distance similarity.
 """
 
 from numpy import ndarray
-from src.similarities.similarity import Similarity
+from src.similarities.similarity import Similarity, SimilarityConfig
+from src.decorators.hydra_config_decorator import hydra_config
+from src.decorators.register_to_factory import register_to_factory
 
 
+@hydra_config(group="similarity")
+class HammingDistanceSimilarityConfig(SimilarityConfig):
+    """
+    Dataclass for holding HammingDistanceSimilarity configuration.
+    """
+
+    name: str = "hamming_distance_similarity"
+
+
+@register_to_factory(Similarity.factory)
 class HammingDistanceSimilarity(Similarity):
     """
     Calculates the Hamming distance similarity between two arrays.

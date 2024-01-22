@@ -1,0 +1,4 @@
+name: local_binary_pattern
+n_points: 20
+radius: 10.0
+method: uniform

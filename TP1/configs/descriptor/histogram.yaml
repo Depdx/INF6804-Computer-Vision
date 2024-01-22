@@ -1,0 +1,3 @@
+name: histogram
+n_bins: 10
+density: True

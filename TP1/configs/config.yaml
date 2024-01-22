@@ -1,0 +1,6 @@
+defaults: 
+  - feature_extractor : local_binary_pattern
+  - descriptor : histogram
+  - similarity: cosine_similarity
+  - _self_
+

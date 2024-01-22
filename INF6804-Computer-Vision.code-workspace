@@ -19,6 +19,7 @@
             "linalg",
             "multiblock",
             "ndarray",
+            "omegaconf",
             "skimage",
             "tqdm",
             "venv",

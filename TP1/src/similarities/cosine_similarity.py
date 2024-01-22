@@ -1,11 +1,25 @@
 """
 Cosine similarity measure.
 """
+from dataclasses import MISSING
 from numpy import ndarray, dot
 from numpy.linalg import norm
-from src.similarities.similarity import Similarity
+from src.similarities.similarity import Similarity, SimilarityConfig
+from src.decorators.hydra_config_decorator import hydra_config
+from src.decorators.register_to_factory import register_to_factory
 
 
+@hydra_config(group="similarity")
+class CosineSimilarityConfig(SimilarityConfig):
+    """
+    Dataclass for holding IPNormsSimilarity configuration.
+    """
+
+    is_distance: bool = MISSING
+    name: str = "cosine_similarity"
+
+
+@register_to_factory(Similarity.factory)
 class CosineSimilarity(Similarity):
     """
     Computes the cosine similarity between two vectors.

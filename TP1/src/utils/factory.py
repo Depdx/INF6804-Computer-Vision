@@ -3,6 +3,7 @@ Factory class for creating objects based on a name.
 """
 
 from typing import Dict, Type
+from src.utils.text_utils import TextUtils
 
 
 class Factory:
@@ -18,7 +19,7 @@ class Factory:
         assert registry is None or isinstance(registry, dict)
         self._registry = registry or {}
 
-    def register(self, name: str, cls: Type):
+    def register(self, cls: Type):
         """
         Register a class with the factory.
 
@@ -26,7 +27,23 @@ class Factory:
             name: The name of the class.
             cls: The class to register.
         """
+        assert isinstance(cls, type)
+
+        name = TextUtils.pascal_to_snake(cls.__name__)
+        assert name not in self._registry
+        # change to PascalCase name to snake_case
+
         self._registry[name] = cls
+
+    def remove(self, name: str):
+        """
+        Remove a class from the factory.
+
+        args:
+            name: The name of the class to remove.
+        """
+        if name in self._registry:
+            del self._registry[name]
 
     def create(self, name: str, *args, **kwargs):
         """

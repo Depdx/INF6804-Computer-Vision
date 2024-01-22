@@ -2,9 +2,21 @@
 Intersection similarity.
 """
 from numpy import ndarray
-from src.similarities.similarity import Similarity
+from src.similarities.similarity import Similarity, SimilarityConfig
+from src.decorators.hydra_config_decorator import hydra_config
+from src.decorators.register_to_factory import register_to_factory
 
 
+@hydra_config(group="similarity")
+class IntersectionSimilarityConfig(SimilarityConfig):
+    """
+    Dataclass for holding IntersectionSimilarity configuration.
+    """
+
+    name: str = "intersection_similarity"
+
+
+@register_to_factory(Similarity.factory)
 class IntersectionSimilarity(Similarity):
     """
     Calculates the intersection similarity between two arrays.
