@@ -34,4 +34,4 @@ class MatrixFlattener(Descriptor):
             np.ndarray: The flattened matrix of shape (w*h, d, a).
 
         """
-        return matrix.reshape(-1, *matrix.shape[2:])
+        return matrix.flatten()

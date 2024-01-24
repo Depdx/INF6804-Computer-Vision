@@ -98,7 +98,7 @@ class CoOccurrenceMatrix(FeatureExtractor):
                 self.angles,
                 2**self.levels,
                 normed=True,
-            )
+            )[:, :, 0, 0]
 
         if "grey" == self.channel:
             # If the image is not grey
@@ -113,7 +113,7 @@ class CoOccurrenceMatrix(FeatureExtractor):
                 self.angles,
                 2**self.levels,
                 normed=True,
-            )
+            )[:, :, 0, 0]
         else:
             channels = {
                 "red": 0,
@@ -132,4 +132,4 @@ class CoOccurrenceMatrix(FeatureExtractor):
                 self.angles,
                 2**self.levels,
                 normed=True,
-            )
+            )[:, :, 0, 0]
