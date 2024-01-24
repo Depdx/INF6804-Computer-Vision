@@ -28,8 +28,11 @@ class QueryResult:
     similarity_scores: List[float]
     images: List[ndarray]
     images_features: List[ndarray]
-    labels: List[str]
+    labels: List[int]
+    labels_names: List[str]
     query_label: str
+    query_label_name: str
+    query_image: ndarray
 
 
 class Database:
@@ -62,13 +65,14 @@ class Database:
         self.descriptor = descriptor
         self.label_encoder = LabelEncoder()
 
-    @performance_counter(metric_name="ImageProcessing")
+    @performance_counter(metric_name="Processing image")
     def process(self, image):
         """
         Process an image and return its descriptor.
         """
         return self.descriptor(self.feature_extractor(image))
 
+    @performance_counter(metric_name="Query")
     def query(
         self,
         query: ndarray,
@@ -104,15 +108,21 @@ class Database:
         )[:k]
 
         similarities, images, images_features, files = zip(*results)
+        encoded_query_file = self.label_encoder.encode(query_file)
+        encoded_labels = self.label_encoder.encode(files)
         return QueryResult(
             similarity_scores=similarities,
             images=images,
             images_features=images_features,
-            labels=self.label_encoder.encode(files),
-            query_label=self.label_encoder.encode(query_file),
+            labels=encoded_labels,
+            labels_names=self.label_encoder.decode(encoded_labels),
+            query_label=encoded_query_file,
+            query_label_name=self.label_encoder.decode(encoded_query_file),
+            query_image=query,
         )
 
     @lru_cache(maxsize=128)
+    @performance_counter(metric_name="Building database")
     def get_images_features(self):
         """
         Get the features of all images in the database.

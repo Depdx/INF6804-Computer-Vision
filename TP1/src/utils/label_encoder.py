@@ -13,7 +13,7 @@ class LabelEncoder:
     def __init__(self):
         self.labels_encoding = {}
 
-    def encode(self, files_name: Union[List[str], str]) -> Union[List[str], str]:
+    def encode(self, files_name: Union[List[str], str]) -> Union[List[int], int]:
         """
         Encodes the labels based on the given file names.
 
@@ -38,3 +38,26 @@ class LabelEncoder:
             )
 
         return encoded_labels if not is_string else encoded_labels[0]
+
+    def decode(self, labels: Union[List[int], int]) -> Union[List[str], str]:
+        """
+        Decodes the labels based on their encoding.
+
+        Args:
+            labels (Union[List[int], int]): The labels to decode.
+
+        Returns:
+            Union[List[str], str]: The decoded labels.
+        """
+        is_string = isinstance(labels, int)
+        if is_string:
+            labels = [labels]
+
+        decoded_labels = []
+        for label in labels:
+            for key, value in self.labels_encoding.items():
+                if value == label:
+                    decoded_labels.append(key)
+                    break
+
+        return decoded_labels if not is_string else decoded_labels[0]

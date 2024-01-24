@@ -1,12 +1,13 @@
 """
 This module contains the Experiment class and the ExperimentConfig dataclass.
 """
-from dataclasses import MISSING
+from dataclasses import MISSING, asdict
 from typing import List
 import os
 import skimage
 from sklearn.metrics import accuracy_score
 from tqdm.autonotebook import tqdm
+from omegaconf import OmegaConf
 import wandb
 from src.feature_extractors.feature_extractor import FeatureExtractorConfig
 from src.descriptors.descriptor import DescriptorConfig
@@ -54,6 +55,8 @@ class Experiment:
         """
         Run the experiment.
         """
+        wandb.run.config.update(OmegaConf.to_container(self.config))
+
         feature_extractor = FeatureExtractor.factory.create(
             self.config.feature_extractor.name,
             **{
@@ -134,23 +137,26 @@ class Experiment:
         for result in results:
             wandb.log(
                 {
-                    f"Query/{result.query_label}": wandb.Table(
+                    f"Query/{result.query_label_name}/Result": wandb.Table(
                         allow_mixed_types=True,
                         columns=["Similarity", "Image", "Features", "File"],
                         data=[
                             [
                                 similarity,
                                 wandb.Image(image),
-                                wandb.Histogram(features),
-                                file,
+                                features,
+                                label_name,
                             ]
-                            for similarity, image, features, file in zip(
+                            for similarity, image, features, label_name in zip(
                                 result.similarity_scores,
                                 result.images,
                                 result.images_features,
-                                result.labels,
+                                result.labels_names,
                             )
                         ],
-                    )
+                    ),
+                    f"Query/{result.query_label_name}/Query Image": wandb.Image(
+                        result.query_image
+                    ),
                 }
             )
