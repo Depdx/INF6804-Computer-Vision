@@ -56,8 +56,8 @@ class CoOccurrenceMatrix(FeatureExtractor):
     def __init__(
         self,
         *,
-        distances: [int],
-        angles: [float],
+        distances: int,
+        angles: float,
         levels: int,
         channel: ChannelEnum,
     ) -> None:
@@ -76,8 +76,8 @@ class CoOccurrenceMatrix(FeatureExtractor):
 
         """
 
-        self.distances = distances
-        self.angles = angles
+        self.distances = [distances]
+        self.angles = [angles]
         self.levels = levels
         self.channel = channel
 
