@@ -2,15 +2,18 @@
 This module contains the Experiment class and the ExperimentConfig dataclass.
 """
 from dataclasses import MISSING
+from typing import List
 import os
 import skimage
+from sklearn.metrics import accuracy_score
 from tqdm.autonotebook import tqdm
+import wandb
 from src.feature_extractors.feature_extractor import FeatureExtractorConfig
 from src.descriptors.descriptor import DescriptorConfig
 from src.similarities.similarity import SimilarityConfig
 from src.decorators.hydra_config_decorator import hydra_config
 from src.decorators.wandb_run_decorator import wandb_run
-from src.database import Database
+from src.database import Database, QueryResult
 from src.descriptors.descriptor import Descriptor
 from src.feature_extractors.feature_extractor import FeatureExtractor
 from src.similarities.similarity import Similarity
@@ -93,22 +96,61 @@ class Experiment:
             },
         )
 
-        for root, _, files in tqdm(
-            os.walk(self.config.query_path),
-            desc="Querying",
-        ):
-            for file in files:
+        results: List[QueryResult] = []
+        for root, _, files in os.walk(self.config.query_path):
+            for file in tqdm(files, desc="Querying", unit="query"):
                 query_path = os.path.join(root, file)
                 query = skimage.io.imread(query_path)
-                results = database.query(
+                result = database.query(
                     query=query,
+                    query_file=file,
                     similarity_measure=similarity_measure,
                     k=self.config.top_k,
                 )
-                for similarity, image, features, file in results:
-                    print(f"Similarity: {similarity}")
-                    print(f"File: {file}")
-                    skimage.io.imshow(image)
-                    skimage.io.show()
-                # TODO: log the top-k accuracy to wandb
-                # TODO: log the query image and the top-k results to wandb
+                results.append(result)
+
+        top_3_accuracy = accuracy_score(
+            y_true=[result.query_label for result in results],
+            y_pred=[
+                result.query_label
+                if result.query_label in result.labels[:3]
+                else result.labels[0]
+                for result in results
+            ],
+        )
+
+        accuracy = accuracy_score(
+            y_true=[result.query_label for result in results],
+            y_pred=[result.labels[0] for result in results],
+        )
+
+        wandb.log(
+            {
+                "Metrics/Top-3 Accuracy": top_3_accuracy,
+                "Metrics/Accuracy": accuracy,
+            }
+        )
+
+        for result in results:
+            wandb.log(
+                {
+                    f"Query/{result.query_label}": wandb.Table(
+                        allow_mixed_types=True,
+                        columns=["Similarity", "Image", "Features", "File"],
+                        data=[
+                            [
+                                similarity,
+                                wandb.Image(image),
+                                wandb.Histogram(features),
+                                file,
+                            ]
+                            for similarity, image, features, file in zip(
+                                result.similarity_scores,
+                                result.images,
+                                result.images_features,
+                                result.labels,
+                            )
+                        ],
+                    )
+                }
+            )

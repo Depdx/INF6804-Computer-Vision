@@ -1,11 +1,35 @@
 """
 A module for representing a database of images for similarity search.
 """
+from dataclasses import dataclass
 from functools import lru_cache
 from os import listdir
+from typing import List
 from skimage.io import imread
+from numpy import ndarray
 from tqdm.autonotebook import tqdm
 from src.decorators.performance_counter_decorator import performance_counter
+from src.utils.label_encoder import LabelEncoder
+
+
+@dataclass
+class QueryResult:
+    """
+    A dataclass representing a query result.
+
+    Args:
+        similarity_scores (List[float]): The similarity scores of the images.
+        images (List[ndarray]): The images.
+        images_features (List[ndarray]): The images features.
+        labels (List[str]): The labels of the images.
+        query_label (str): The label of the query image.
+    """
+
+    similarity_scores: List[float]
+    images: List[ndarray]
+    images_features: List[ndarray]
+    labels: List[str]
+    query_label: str
 
 
 class Database:
@@ -36,6 +60,7 @@ class Database:
         self.files = listdir(directory)
         self.feature_extractor = feature_extractor
         self.descriptor = descriptor
+        self.label_encoder = LabelEncoder()
 
     @performance_counter(metric_name="ImageProcessing")
     def process(self, image):
@@ -44,12 +69,19 @@ class Database:
         """
         return self.descriptor(self.feature_extractor(image))
 
-    def query(self, query, similarity_measure: callable, k: int):
+    def query(
+        self,
+        query: ndarray,
+        query_file: str,
+        similarity_measure: callable,
+        k: int,
+    ):
         """
         Perform a similarity search on the database using a query image.
 
         Args:
             query: The query image.
+            query_file (str): The query image file name.
             similarity_measure (callable): A function or method used to measure similarity
                 between images.
             k (int): The number of most similar images to retrieve.
@@ -65,11 +97,20 @@ class Database:
             for image_features in images_features
         ]
 
-        return sorted(
+        results = sorted(
             zip(similarities, self.get_images(), images_features, self.files),
             key=lambda x: x[0],
             reverse=True,
         )[:k]
+
+        similarities, images, images_features, files = zip(*results)
+        return QueryResult(
+            similarity_scores=similarities,
+            images=images,
+            images_features=images_features,
+            labels=self.label_encoder.encode(files),
+            query_label=self.label_encoder.encode(query_file),
+        )
 
     @lru_cache(maxsize=128)
     def get_images_features(self):
