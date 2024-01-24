@@ -34,8 +34,8 @@ class CoOccurrenceMatrixConfig(FeatureExtractorConfig):
     Dataclass for holding co-occurrence matrix configuration.
     """
 
-    distances: List[int] = MISSING
-    angles: List[float] = MISSING
+    distances: int = MISSING
+    angles: float = MISSING
     levels: int = MISSING
     channel: str = MISSING
 
@@ -56,8 +56,8 @@ class CoOccurrenceMatrix(FeatureExtractor):
     def __init__(
         self,
         *,
-        distances: [int],
-        angles: [float],
+        distances: int,
+        angles: float,
         levels: int,
         channel: ChannelEnum,
     ) -> None:
@@ -76,8 +76,8 @@ class CoOccurrenceMatrix(FeatureExtractor):
 
         """
 
-        self.distances = distances
-        self.angles = angles
+        self.distances = [distances]
+        self.angles = [angles]
         self.levels = levels
         self.channel = channel
 
