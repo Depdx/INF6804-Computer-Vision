@@ -1,7 +1,5 @@
 name: co_occurrence_matrix
-distances: 
-  - 1
-angles:
-  - 0
+distances: 1
+angles:  0
 levels: 256
 channel: "gray"

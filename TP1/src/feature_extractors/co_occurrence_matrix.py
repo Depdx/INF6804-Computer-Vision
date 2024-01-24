@@ -34,8 +34,8 @@ class CoOccurrenceMatrixConfig(FeatureExtractorConfig):
     Dataclass for holding co-occurrence matrix configuration.
     """
 
-    distances: List[int] = MISSING
-    angles: List[float] = MISSING
+    distances: int = MISSING
+    angles: float = MISSING
     levels: int = MISSING
     channel: str = MISSING
 
