@@ -5,5 +5,5 @@ defaults:
   - similarity: cosine_similarity
 
 database_path: ./data/database
-query_path: ./data
+query_path: ./data/queries
 top_k: 3
