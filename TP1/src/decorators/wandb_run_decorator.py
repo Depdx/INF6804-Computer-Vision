@@ -35,7 +35,7 @@ def wandb_run(group: str = None, name: str = None):
             run = wandb.init(
                 project="computer-vision-tp1",
                 entity="depdx",
-                group=group,
+                group='tmp',
                 name=name,
             )
             if run is None:
