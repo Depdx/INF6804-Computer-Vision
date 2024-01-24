@@ -112,11 +112,11 @@ class Experiment:
                 )
                 results.append(result)
 
-        top_3_accuracy = accuracy_score(
+        top_k_accuracy = accuracy_score(
             y_true=[result.query_label for result in results],
             y_pred=[
                 result.query_label
-                if result.query_label in result.labels[:3]
+                if result.query_label in result.labels
                 else result.labels[0]
                 for result in results
             ],
@@ -129,7 +129,7 @@ class Experiment:
 
         wandb.log(
             {
-                "Metrics/Top-3 Accuracy": top_3_accuracy,
+                "Metrics/Top-k Accuracy": top_k_accuracy,
                 "Metrics/Accuracy": accuracy,
             }
         )
