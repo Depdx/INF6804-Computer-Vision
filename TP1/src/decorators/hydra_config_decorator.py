@@ -3,7 +3,6 @@ A decorator function for registering a class with Hydra's ConfigStore.
 """
 
 from dataclasses import dataclass
-from functools import wraps
 from typing import Optional
 from hydra.core.config_store import ConfigStore
 from src.utils.text_utils import TextUtils

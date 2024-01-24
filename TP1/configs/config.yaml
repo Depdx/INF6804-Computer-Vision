@@ -7,3 +7,56 @@ defaults:
 database_path: ./data/database
 query_path: ./data/queries
 top_k: 3
+
+hydra:
+  sweeper:
+    params:
+      similarity:
+        - cosine_similarity
+        - ip_norms_similarity
+        - intersection_similarity
+      feature_extractor: local_binary_pattern
+      feature_extractor.local_binary_pattern.n_points: 
+        - 8
+        - 24
+        - 40
+        - 60
+      feature_extractor.local_binary_pattern.radius:
+        - 1.0
+        - 5.0
+        - 10.0
+        - 15.0
+      feature_extractor.local_binary_pattern.method:
+        - uniform
+        - default
+      descriptor: histogram
+
+# hydra:
+#   sweeper:
+#     params:
+#       similarity:
+#         - cosine_similarity
+#         - ip_norms_similarity
+#         - intersection_similarity
+#       feature_extractor: co_occurrence_matrix
+#       feature_extractor.co_occurrence_matrix.distances: 
+#         - 1
+#         - 5
+#         - 10
+#         - 15
+#       feature_extractor.co_occurrence_matrix.angles:
+#         - 0
+#         - 0.785398163
+#         - 1.57079633
+#         - 2.35619449
+#       feature_extractor.co_occurrence_matrix.levels:
+#         - 4
+#         - 6
+#         - 8
+#       feature_extractor.co_occurrence_matrix.channel:
+#         - grey
+#         - red
+#         - green
+#         - blue
+#         - every
+#       descriptor: matrix_flattener
