@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="58.0531 136.5621 371.6026 185.8013" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <g id="layer1" transform="matrix(0.06670399755239485, 0, 0, 0.06670399755239485, 125.97027775600962, 97.75223686921947)">
+    <g style="" transform="matrix(1.39273, 0, 0, 1.39273, -1018.187881, 581.821664)">
+      <path style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="M 0,0 4000,0" id="h0"/>
+      <path style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="m 0,500 4000,0" id="h1"/>
+      <path id="h2" d="m 0,1000 4000,0" style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"/>
+      <path style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="m 0,1500 4000,0" id="h3"/>
+      <path id="h4" d="m 0,2000 4000,0" style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"/>
+      <path style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="M 0,0 0,2000" id="v0"/>
+      <path id="v1" d="m 500,0 0,2000" style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"/>
+      <path style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="m 1000,0 0,2000" id="v2"/>
+      <path id="v3" d="m 1500,0 0,2000" style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"/>
+      <path style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="m 2000,0 0,2000" id="v4"/>
+      <path id="v5" d="m 2500,0 0,2000" style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"/>
+      <path style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="m 3000,0 0,2000" id="v6"/>
+      <path id="v7" d="m 3500,0 0,2000" style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"/>
+      <path style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="m 4000,0 0,2000" id="v8"/>
+    </g>
+  </g>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 32px;" x="209.453" y="264.307" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.4210854715202004e-14, 7.105427357601002e-15)">A</text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 31.7px;" x="303.409" y="219.711" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.4210854715202004e-14, 7.105427357601002e-15)">B</text>
+  <path d="M 222.007 275.287 H 314.089 L 291.089 261.787 L 315.089 275.787 L 291.089 289.787 L 314.089 276.287 H 222.007 V 275.287 Z" style="fill: rgb(216, 216, 216); stroke: rgb(205, 0, 0); stroke-width: 2px; stroke-linejoin: round; stroke-linecap: round;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.4210854715202004e-14, 7.105427357601002e-15)" bx:shape="arrow 222.007 261.787 93.082 28 1 24 23 1@b6778cd5"/>
+  <path d="M 174.722 252.841 H 223.403 L 200.403 239.341 L 224.403 253.341 L 200.403 267.341 L 223.403 253.841 H 174.722 V 252.841 Z" style="fill: rgb(216, 216, 216); stroke: rgb(205, 0, 0); stroke-width: 2px; stroke-linejoin: round; stroke-linecap: round;" transform="matrix(0, -0.9999999999999999, 0.9999999999999999, 0, -56.1734780099016, 431.05579255604425)" bx:shape="arrow 174.722 239.341 49.681 28 1 24 23 1@2830481f"/>
+  <text style="fill: rgb(205, 0, 0); font-family: Arial, sans-serif; font-size: 10.5px; white-space: pre;" x="179.809" y="246.159" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.4210854715202004e-14, 7.105427357601002e-15)">dy</text>
+  <text style="fill: rgb(205, 0, 0); font-family: Arial, sans-serif; font-size: 10.5px; white-space: pre;" x="261.811" y="291.648" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -1.4210854715202004e-14, 7.105427357601002e-15)">dx</text>
+</svg>
