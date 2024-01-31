@@ -155,6 +155,8 @@ class Experiment:
                             )
                         ],
                     ),
+                    f"Query/{result.query_label_name}/is_in_top_k": result.query_label
+                    in result.labels,
                     f"Query/{result.query_label_name}/Query Image": wandb.Image(
                         result.query_image
                     ),
