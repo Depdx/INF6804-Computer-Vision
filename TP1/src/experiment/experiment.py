@@ -158,5 +158,6 @@ class Experiment:
                     f"Query/{result.query_label_name}/Query Image": wandb.Image(
                         result.query_image
                     ),
+                    f"Query/{result.query_label_name}/Query Features": result.query_features,
                 }
             )

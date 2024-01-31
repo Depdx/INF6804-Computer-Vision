@@ -33,6 +33,7 @@ class QueryResult:
     query_label: str
     query_label_name: str
     query_image: ndarray
+    query_features: ndarray
 
 
 class Database:
@@ -119,6 +120,7 @@ class Database:
             query_label=encoded_query_file,
             query_label_name=self.label_encoder.decode(encoded_query_file),
             query_image=query,
+            query_features=query_features,
         )
 
     @lru_cache(maxsize=128)
