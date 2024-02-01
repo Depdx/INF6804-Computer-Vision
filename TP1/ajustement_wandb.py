@@ -1,5 +1,6 @@
 import wandb
 from src.utils.environment import Environment
+from tqdm.autonotebook import tqdm
 
 
 if __name__ == "__main__":
@@ -12,7 +13,7 @@ if __name__ == "__main__":
             }
         },
     )
-    for finished_run in runs:
+    for finished_run in tqdm(runs, desc="Runs", unit="run"):
         run = wandb.init(
             project="computer-vision-tp1",
             entity="depdx",
@@ -45,4 +46,4 @@ if __name__ == "__main__":
                     f"Query/{label}/Is Top-k Correct": is_top_k_correct,
                 }
             )
-            run.finish()
+        run.finish()
