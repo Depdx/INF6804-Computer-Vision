@@ -12,6 +12,7 @@ from omegaconf import OmegaConf
 import wandb
 from src.decorators.hydra_config_decorator import hydra_config
 from src.decorators.wandb_run_decorator import wandb_run
+from src.dataset import Dataset
 
 
 @hydra_config(name="base_config")
@@ -40,3 +41,6 @@ class Experiment:
         Run the experiment.
         """
         wandb.run.config.update(OmegaConf.to_container(self.config))
+
+        dataset = Dataset()
+        print("Dataset loaded")
