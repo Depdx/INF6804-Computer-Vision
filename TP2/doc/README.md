@@ -1,5 +1,5 @@
 Lien vers le rapport: 
-Lien vers wandb: 
+Lien vers wandb: https://wandb.ai/depdx/computer-vision-tp2?workspace=user-nicolasdepelteau
 
 
 Resources:
