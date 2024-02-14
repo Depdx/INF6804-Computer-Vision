@@ -2,7 +2,6 @@
 A decorator function for registering a class with Hydra's ConfigStore.
 """
 
-from dataclasses import dataclass
 from typing import Optional
 from hydra.core.config_store import ConfigStore
 from src.utils.text_utils import TextUtils
@@ -22,19 +21,11 @@ def hydra_config(*, group: Optional[str] = None, name: Optional[str] = None):
     """
 
     def hydra_config_class(original_class):
-        @dataclass
-        class HydraConfigClass(original_class):
-            """
-            A wrapper class for the original class that registers
-            the original class with Hydra's ConfigStore.
-            """
 
         class_name = original_class.__name__.replace("Config", "")
         store_name = name or f"base_{TextUtils.pascal_to_snake(class_name)}"
-        ConfigStore.instance().store(
-            group=group, name=store_name, node=HydraConfigClass
-        )
+        ConfigStore.instance().store(group=group, name=store_name, node=original_class)
 
-        return HydraConfigClass
+        return original_class
 
     return hydra_config_class

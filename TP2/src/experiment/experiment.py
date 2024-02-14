@@ -12,7 +12,7 @@ from omegaconf import OmegaConf
 import wandb
 from src.decorators.hydra_config_decorator import hydra_config
 from src.decorators.wandb_run_decorator import wandb_run
-from src.dataset import Dataset
+from src.dataset import CDWDataset, VideoDataset
 
 
 @hydra_config(name="base_config")
@@ -42,5 +42,5 @@ class Experiment:
         """
         wandb.run.config.update(OmegaConf.to_container(self.config))
 
-        dataset = Dataset()
-        print("Dataset loaded")
+        dataset = CDWDataset()
+        video_0 = dataset[0]
