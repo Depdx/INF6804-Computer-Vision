@@ -19,7 +19,7 @@ def main():
         type="dataset",
         description="CDW-2012 dataset http://jacarini.dinf.usherbrooke.ca/cdw2012.html",
     )
-    dataset_artifact.add_dir("data/dataset/baseline")
+    dataset_artifact.add_dir("data/dataset/baseline", name="CDW-2012-Baseline")
     wandb.log_artifact(dataset_artifact)
 
 
