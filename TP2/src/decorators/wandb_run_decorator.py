@@ -33,8 +33,8 @@ def wandb_run(group: str = None, name: str = None):
 
             wandb.login(key=Environment.wanb_api_key)
             run = wandb.init(
-                project="computer-vision-tp1",
-                entity="depdx",
+                project=Environment.wandb_project,
+                entity=Environment.wandb_entity,
                 group=group,
                 name=name,
             )
