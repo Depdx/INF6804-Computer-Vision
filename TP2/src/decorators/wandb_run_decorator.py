@@ -9,7 +9,7 @@ from src.utils.environment import Environment
 Run = wandb.wandb_sdk.wandb_run.Run
 
 
-def wandb_run(group: str = None, name: str = None):
+def wandb_run(group: str = None, name: str = None, **wandb_init_kwargs: dict):
     """
     Decorator that initializes a wandb run and finishes it after the function
 
@@ -37,6 +37,7 @@ def wandb_run(group: str = None, name: str = None):
                 entity=Environment.wandb_entity,
                 group=group,
                 name=name,
+                **wandb_init_kwargs,
             )
             if run is None:
                 raise ValueError("run is None after wandb.init")
