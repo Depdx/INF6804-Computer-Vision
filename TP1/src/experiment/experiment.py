@@ -155,8 +155,15 @@ class Experiment:
                             )
                         ],
                     ),
+                    f"Query/{result.query_label_name}/is_in_top_k": result.query_label
+                    in result.labels,
                     f"Query/{result.query_label_name}/Query Image": wandb.Image(
                         result.query_image
                     ),
+                    f"Query/{result.query_label_name}/Query Features": result.query_features,
+                    f"Query/{result.query_label_name}/Is Correct": result.query_label
+                    == result.labels[0],
+                    f"Query/{result.query_label_name}/Is Top-k Correct": result.query_label
+                    in result.labels,
                 }
             )
