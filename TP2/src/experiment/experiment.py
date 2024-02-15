@@ -79,18 +79,9 @@ class Experiment:
                 ).to(torch.bool)
 
                 masks = segmentation_method(images)
-                self.update_metrics(masks, ground_truths)
+                self.confusion_matrix.update(masks, ground_truths)
             self.log_metrics(video_dataset.name)
-
-    def update_metrics(self, masks: torch.Tensor, ground_truths: torch.Tensor):
-        """
-        Update the metrics of the experiment.
-
-        Args:
-            masks (torch.Tensor): The masks of the images.
-            ground_truths (torch.Tensor): The ground truths of the images.
-        """
-        self.confusion_matrix.update(masks, ground_truths)
+            self.confusion_matrix.reset()
 
     def log_metrics(self, video_dataset_name: str):
         """
@@ -135,4 +126,3 @@ class Experiment:
                 f"Metrics/{video_dataset_name}/Average ranking": average_ranking,
             }
         )
-        self.confusion_matrix.reset()

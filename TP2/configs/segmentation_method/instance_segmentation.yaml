@@ -1,1 +1,5 @@
 name: instance_segmentation
+model: maskrcnn_resnet50_fpn
+threshold: 0.1
+cut_off: 0.5
+device: cpu
