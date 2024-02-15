@@ -12,9 +12,6 @@
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": [
-                "segmentation_method=instance_segmentation",
-                "batch_size=4",
-                "segmentation_method.device=cuda",
             ]
         }
     ]

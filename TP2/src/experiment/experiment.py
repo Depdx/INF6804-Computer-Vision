@@ -20,6 +20,7 @@ from src.segmentation_methods.segmentation_method import (
     SegmentationMethod,
     SegmentationMethodConfig,
 )
+from src.metrics.experiment_metrics import ExperimentMetrics
 
 
 @hydra_config(name="base_config")
@@ -47,6 +48,9 @@ class Experiment:
     def __init__(self, config: ExperimentConfig):
         self.config = config
         self.confusion_matrix = torchmetrics.ConfusionMatrix(task="binary")
+        self.per_image_confusion_matrix = torchmetrics.ConfusionMatrix(task="binary")
+        self.prediction_table = None
+        self.dataset = None
 
     @wandb_run()
     def run(self):
@@ -59,15 +63,21 @@ class Experiment:
             self.config.segmentation_method.name, self.config.segmentation_method
         )
 
-        for video_dataset in tqdm(CDWDataset(), desc="Videos", unit="video dataset"):
-            video_dataset: VideoDataset
-            segmentation_method.fit(video_dataset)
+        self.dataset = CDWDataset()
+        for train_video_dataset, test_video_dataset in tqdm(
+            self.dataset, desc="Videos", unit="video dataset"
+        ):
+            train_video_dataset: VideoDataset
+            test_video_dataset: VideoDataset
+            segmentation_method.fit(train_video_dataset)
             video_dataloader = DataLoader(
-                video_dataset,
+                test_video_dataset,
                 num_workers=os.cpu_count() // 2,
                 batch_size=self.config.batch_size,
             )
-            for images, ground_truths in tqdm(
+            self.__create_prediction_table()
+
+            for images, ground_truths, image_ids in tqdm(
                 video_dataloader, desc="Segmenting", leave=False
             ):
                 ground_truths: torch.Tensor
@@ -80,7 +90,13 @@ class Experiment:
 
                 masks = segmentation_method(images)
                 self.confusion_matrix.update(masks, ground_truths)
-            self.log_metrics(video_dataset.name)
+                self.log_predictions(
+                    video_dataset_name=test_video_dataset.name,
+                    masks=masks,
+                    ground_truths=ground_truths,
+                    image_ids=image_ids,
+                )
+            self.log_metrics(test_video_dataset.name)
             self.confusion_matrix.reset()
 
     def log_metrics(self, video_dataset_name: str):
@@ -88,41 +104,103 @@ class Experiment:
         Log the metrics of the experiment.
         """
         confusion_matrix = self.confusion_matrix.compute()
-        true_positive = confusion_matrix[1, 1]
-        true_negative = confusion_matrix[0, 0]
-        false_positive = confusion_matrix[0, 1]
-        false_negative = confusion_matrix[1, 0]
-        precision = true_positive / (true_positive + false_positive)
-        recall = true_positive / (true_positive + false_negative)
-        specificity = true_negative / (true_negative + false_positive)
-        false_positive_rate = false_positive / (false_positive + true_negative)
-        false_negative_rate = false_negative / (false_negative + true_positive)
-        percentage_of_wrong_classifications = (false_positive + false_negative) / (
-            true_positive + true_negative + false_positive + false_negative
-        )
-        f1_score = 2 * (precision * recall) / (precision + recall)
-        average_ranking = (
-            recall
-            + specificity
-            + false_positive_rate
-            + false_negative_rate
-            + percentage_of_wrong_classifications
-            + f1_score
-            + precision
-        ) / 7
+        metrics = ExperimentMetrics(confusion_matrix)
         wandb.log(
             {
-                f"Metrics/{video_dataset_name}/True Positive": true_positive,
-                f"Metrics/{video_dataset_name}/True Negative": true_negative,
-                f"Metrics/{video_dataset_name}/False Positive": false_positive,
-                f"Metrics/{video_dataset_name}/False Negative": false_negative,
-                f"Metrics/{video_dataset_name}/Recall": recall,
-                f"Metrics/{video_dataset_name}/Specificity": specificity,
-                f"Metrics/{video_dataset_name}/False Positive Rate": false_positive_rate,
-                f"Metrics/{video_dataset_name}/False Negative Rate": false_negative_rate,
-                f"Metrics/{video_dataset_name}/Percentage of Wrong Classifications": percentage_of_wrong_classifications,
-                f"Metrics/{video_dataset_name}/F1 Score": f1_score,
-                f"Metrics/{video_dataset_name}/Precision": precision,
-                f"Metrics/{video_dataset_name}/Average ranking": average_ranking,
+                f"Metrics/{video_dataset_name}/True Positive": metrics.true_positive,
+                f"Metrics/{video_dataset_name}/True Negative": metrics.true_negative,
+                f"Metrics/{video_dataset_name}/False Positive": metrics.false_positive,
+                f"Metrics/{video_dataset_name}/False Negative": metrics.false_negative,
+                f"Metrics/{video_dataset_name}/Recall": metrics.recall,
+                f"Metrics/{video_dataset_name}/Specificity": metrics.specificity,
+                f"Metrics/{video_dataset_name}/False Positive Rate": metrics.false_positive_rate,
+                f"Metrics/{video_dataset_name}/False Negative Rate": metrics.false_negative_rate,
+                f"Metrics/{video_dataset_name}/Percentage of Wrong Classifications": metrics.percentage_of_wrong_classifications,
+                f"Metrics/{video_dataset_name}/F1 Score": metrics.f1_score,
+                f"Metrics/{video_dataset_name}/Precision": metrics.precision,
+                f"Metrics/{video_dataset_name}/Average ranking": metrics.average_ranking,
+                f"Predictions/{video_dataset_name}": self.prediction_table,
             }
+        )
+
+    def log_predictions(
+        self,
+        *,
+        video_dataset_name: str,
+        masks: torch.Tensor,
+        ground_truths: torch.Tensor,
+        image_ids: torch.Tensor,
+    ):
+        """
+        Log the predictions of the experiment.
+        """
+
+        for mask, ground_truth, image_id in zip(
+            torch.unbind(masks),
+            torch.unbind(ground_truths),
+            torch.unbind(image_ids),
+        ):
+            self.per_image_confusion_matrix.update(mask, ground_truth)
+            confusion_matrix = self.per_image_confusion_matrix.compute()
+            metrics = ExperimentMetrics(confusion_matrix)
+            self.per_image_confusion_matrix.reset()
+            image_id = str(image_id.item()).zfill(6)
+            self.prediction_table.add_data(
+                wandb.Image(
+                    os.path.join(
+                        self.dataset.dataset_dir,
+                        f"{video_dataset_name}/input/in{image_id}.jpg",
+                    ),
+                    masks={
+                        "predictions": {
+                            "mask_data": mask.numpy().astype("uint8"),
+                            "class_labels": {
+                                0: "background",
+                                1: "foreground",
+                            },
+                        },
+                    },
+                    caption=f"Mask {image_id}",
+                ),
+                wandb.Image(
+                    os.path.join(
+                        self.dataset.dataset_dir,
+                        f"{video_dataset_name}/groundtruth/gt{image_id}.png",
+                    )
+                ),
+                metrics.true_positive,
+                metrics.true_negative,
+                metrics.false_positive,
+                metrics.false_negative,
+                metrics.recall,
+                metrics.specificity,
+                metrics.false_positive_rate,
+                metrics.false_negative_rate,
+                metrics.percentage_of_wrong_classifications,
+                metrics.f1_score,
+                metrics.precision,
+                metrics.average_ranking,
+            )
+
+    def __create_prediction_table(self):
+        """
+        Create the prediction table.
+        """
+        self.prediction_table = wandb.Table(
+            columns=[
+                "Predicted Mask",
+                "Groundtruth",
+                "True Positive",
+                "True Negative",
+                "False Positive",
+                "False Negative",
+                "Recall",
+                "Specificity",
+                "False Positive Rate",
+                "False Negative Rate",
+                "Percentage of Wrong Classifications",
+                "F1 Score",
+                "Precision",
+                "Average ranking",
+            ]
         )

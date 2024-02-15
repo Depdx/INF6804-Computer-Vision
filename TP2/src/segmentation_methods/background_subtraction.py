@@ -2,7 +2,7 @@ from dataclasses import dataclass, MISSING
 from enum import Enum
 import torch
 import wandb
-from tqdm.autonotebook import trange
+from tqdm.autonotebook import trange, tqdm
 from src.segmentation_methods.segmentation_method import SegmentationMethod
 from src.decorators.hydra_config_decorator import hydra_config
 from src.segmentation_methods.segmentation_method import SegmentationMethodConfig
@@ -30,34 +30,24 @@ class BackgroundSubtraction(SegmentationMethod):
         self.config = config
         self.background = None
 
-    def fit(self, dataset: VideoDataset) -> None:
-        if self.config.method == MethodEnum.MEAN.value:
-            self.background = None
-            for i in trange(
-                dataset.start_region_of_interest,
-                desc="Fitting background",
-                unit="image",
-                leave=False,
-            ):
-                image, _ = dataset[i]
-                if self.background is None:
-                    self.background = image
-                else:
-                    self.background += image / dataset.start_region_of_interest
-        elif self.config.method == MethodEnum.MEDIAN.value:
-            tensors = []
-            for i in trange(
-                dataset.start_region_of_interest,
-                desc="Fitting background",
-                unit="image",
-                leave=False,
-            ):
-                image, _ = dataset[i]
-                tensors.append(image)
-            self.background = torch.stack(tensors)
-            self.background = torch.median(self.background, dim=0).values
+    def fit(self, train_dataset: VideoDataset) -> None:
+        dataloader = torch.utils.data.DataLoader(
+            train_dataset,
+            batch_size=len(train_dataset),
+        )
+        images, *_ = dataloader.__iter__().__next__()
 
-        wandb.log({f"{dataset.name}/Background": wandb.Image(self.background)})
+        if self.config.method == MethodEnum.MEAN.value:
+            self.background = torch.mean(images, dim=0)
+        elif self.config.method == MethodEnum.MEDIAN.value:
+            self.background = torch.median(images, dim=0).values
+        else:
+            raise ValueError("Invalid method for background subtraction")
+        wandb.log(
+            {
+                f"{train_dataset.name}/Background": wandb.Image(self.background),
+            },
+        )
 
     def __call__(self, images: torch.Tensor) -> torch.Tensor:
         """

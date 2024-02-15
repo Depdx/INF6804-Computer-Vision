@@ -33,7 +33,7 @@ class SegmentationMethod(ABC):
     factory = Factory()
 
     @abstractmethod
-    def fit(self, dataset: VideoDataset) -> None:
+    def fit(self, train_dataset: VideoDataset) -> None:
         pass
 
     @abstractmethod

@@ -39,8 +39,8 @@ class InstanceSegmentation(SegmentationMethod):
         self.model = self._get_model(config.model)
         self.model = self.model.to(device=self.config.device)
 
-    def fit(self, dataset: VideoDataset) -> None:
-        return super().fit(dataset)
+    def fit(self, train_dataset: VideoDataset) -> None:
+        return super().fit(train_dataset)
 
     def __call__(self, images: Tensor) -> Tensor:
         """
