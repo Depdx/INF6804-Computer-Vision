@@ -37,7 +37,7 @@ class InstanceSegmentation(SegmentationMethod):
     def __init__(self, config: InstanceSegmentationConfig) -> None:
         self.config = config
         self.model = self._get_model(config.model)
-        self.model.to(device=self.config.device)
+        self.model = self.model.to(device=self.config.device)
 
     def fit(self, dataset: VideoDataset) -> None:
         return super().fit(dataset)
@@ -63,11 +63,17 @@ class InstanceSegmentation(SegmentationMethod):
                     else:
                         mask += prediction["masks"][j][0]
             if mask is None:
-                masks.append(torch.zeros(shape=(images.shape[-2], images.shape[-1])))
+                masks.append(
+                    torch.zeros(
+                        (images.shape[-2], images.shape[-1]), device=self.config.device
+                    )
+                )
             else:
                 masks.append(mask)
         masks = torch.stack(masks, dim=0)
-        return masks > self.config.threshold
+        masks = masks > self.config.threshold
+        masks = masks.to(device="cpu")
+        return masks
 
     def _get_model(self, model: ModelEnum) -> FasterRCNN:
         if model == ModelEnum.MASK_RCNN_RESNET50_FPN.value:
