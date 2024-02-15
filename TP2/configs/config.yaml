@@ -1,5 +1,6 @@
 defaults: 
   - _self_
+  - segmentation_method: background_subtraction
   - override hydra/launcher: joblib
 
-
+batch_size: 128

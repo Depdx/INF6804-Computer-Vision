@@ -1,7 +1,7 @@
 import wandb
 import os
 import torch
-from typing import List
+from typing import List, Tuple
 from torchvision.io import read_image
 
 
@@ -16,11 +16,17 @@ class VideoDataset(torch.utils.data.Dataset):
             ]
             self.start_region_of_interest -= 1
 
-    def __len__(self):
+    def __len__(self) -> int:
         return self.length
 
-    def __getitem__(self, idx):
-        return read_image(os.path.join(self.path, f"input/in{str(idx+1).zfill(6)}.jpg"))
+    def __getitem__(self, idx) -> Tuple[torch.Tensor, torch.Tensor]:
+        return read_image(
+            os.path.join(self.path, f"input/in{str(idx+1).zfill(6)}.jpg")
+        ).to(torch.float32), read_image(
+            os.path.join(self.path, f"groundtruth/gt{str(idx+1).zfill(6)}.png")
+        ).to(
+            torch.float32
+        )
 
 
 class CDWDataset(torch.utils.data.Dataset):
@@ -31,10 +37,10 @@ class CDWDataset(torch.utils.data.Dataset):
         self.dataset_dir = dataset_dir
         self.videos_directories = os.listdir(dataset_dir)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.videos_directories)
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx) -> VideoDataset:
         return VideoDataset(
             os.path.join(self.dataset_dir, self.videos_directories[idx])
         )

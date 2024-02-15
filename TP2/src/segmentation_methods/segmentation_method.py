@@ -37,13 +37,12 @@ class SegmentationMethod(ABC):
         pass
 
     @abstractmethod
-    def __call__(self, image: torch.Tensor) -> torch.Tensor:
+    def __call__(self, images: torch.Tensor) -> torch.Tensor:
         """
         Apply the segmentation method to an image.
 
         Args:
-            image (torch.Tensor): The image to segment.
+            images (torch.Tensor): The image to segment. The shape is (B, C, H, W).
         Returns:
             torch.Tensor: The segmented mask of the image.
         """
-        pass

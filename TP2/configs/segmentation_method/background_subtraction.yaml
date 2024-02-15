@@ -1,0 +1,3 @@
+name: background_subtraction
+threshold: 20
+method: mean

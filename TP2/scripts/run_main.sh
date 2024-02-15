@@ -1,0 +1,1 @@
+python main.py segmentation_method=instance_segmentation
