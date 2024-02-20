@@ -12,7 +12,8 @@
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": [
-                "batch_size=128",
+                "batch_size=4",
+                "segmentation_method=instance_segmentation"
             ]
         }
     ]

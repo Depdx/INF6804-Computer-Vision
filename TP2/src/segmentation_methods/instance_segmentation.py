@@ -26,7 +26,6 @@ class ModelEnum(Enum):
 class InstanceSegmentationConfig(SegmentationMethodConfig):
     model: ModelEnum = MISSING
     threshold: float = MISSING
-    cut_off: float = 0.5
     device: str = "cpu"
     name: str = "instance_segmentation"
 
@@ -57,21 +56,22 @@ class InstanceSegmentation(SegmentationMethod):
         for prediction in predictions:
             mask = None
             for j, score in enumerate(prediction["scores"]):
-                if score >= self.config.cut_off:
+                if score > self.config.threshold:
                     if mask is None:
-                        mask = prediction["masks"][j][0]
+                        mask = prediction["masks"][j][0] > self.config.threshold
                     else:
-                        mask += prediction["masks"][j][0]
+                        mask += prediction["masks"][j][0] > self.config.threshold
             if mask is None:
                 masks.append(
                     torch.zeros(
-                        (images.shape[-2], images.shape[-1]), device=self.config.device
+                        (images.shape[-2], images.shape[-1]),
+                        device=self.config.device,
+                        dtype=torch.bool,
                     )
                 )
             else:
                 masks.append(mask)
         masks = torch.stack(masks, dim=0)
-        masks = masks > self.config.threshold
         masks = masks.to(device="cpu")
         return masks
 
