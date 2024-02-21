@@ -6,6 +6,8 @@ from torchvision.models.detection import (
     maskrcnn_resnet50_fpn,
     maskrcnn_resnet50_fpn_v2,
     FasterRCNN,
+    MaskRCNN_ResNet50_FPN_Weights,
+    MaskRCNN_ResNet50_FPN_V2_Weights,
 )
 from src.dataset import VideoDataset
 from src.segmentation_methods.segmentation_method import (
@@ -26,6 +28,7 @@ class ModelEnum(Enum):
 class InstanceSegmentationConfig(SegmentationMethodConfig):
     model: ModelEnum = MISSING
     threshold: float = MISSING
+    mask_threshold: float = 0.5
     device: str = "cpu"
     name: str = "instance_segmentation"
 
@@ -35,8 +38,16 @@ class InstanceSegmentation(SegmentationMethod):
 
     def __init__(self, config: InstanceSegmentationConfig) -> None:
         self.config = config
-        self.model = self._get_model(config.model)
+        self.model, self.images_transform = self._get_model(config.model)
         self.model = self.model.to(device=self.config.device)
+        self.coco_labels = [
+            0,  # Person
+            1,  # Bicycle
+            2,  # Car
+            3,  # Motorcycle
+            5,  # Bus
+            7,  # Truck
+        ]
 
     def fit(self, train_dataset: VideoDataset) -> None:
         return super().fit(train_dataset)
@@ -46,21 +57,25 @@ class InstanceSegmentation(SegmentationMethod):
         Apply the segmentation method to an image.
 
         Args:
-            images (torch.Tensor): The image to segment. The shape is (B, C, H, W).
+            images (torch.Tensor): The images to segment. The shape is (B, C, H, W).
         Returns:
             torch.Tensor: The segmented mask of the image.
         """
         images = images.to(device=self.config.device)
+        images = self.images_transform(images)
+        images = images / 255.0  # Normalize the images to [0, 1] range
         predictions = self.model(images)
         masks = []
         for prediction in predictions:
             mask = None
             for j, score in enumerate(prediction["scores"]):
+                if prediction["labels"][j] not in self.coco_labels:
+                    continue
                 if score > self.config.threshold:
                     if mask is None:
-                        mask = prediction["masks"][j][0] > self.config.threshold
+                        mask = prediction["masks"][j][0] >= self.config.mask_threshold
                     else:
-                        mask += prediction["masks"][j][0] > self.config.threshold
+                        mask += prediction["masks"][j][0] >= self.config.mask_threshold
             if mask is None:
                 masks.append(
                     torch.zeros(
@@ -77,8 +92,16 @@ class InstanceSegmentation(SegmentationMethod):
 
     def _get_model(self, model: ModelEnum) -> FasterRCNN:
         if model == ModelEnum.MASK_RCNN_RESNET50_FPN.value:
-            return maskrcnn_resnet50_fpn(pretrained=True).eval()
+            weights = MaskRCNN_ResNet50_FPN_Weights.COCO_V1
+            return (
+                maskrcnn_resnet50_fpn(weights=weights).eval(),
+                weights.transforms(),
+            )
         elif model == ModelEnum.MASK_RCNN_RESNET50_FPN_V2.value:
-            return maskrcnn_resnet50_fpn_v2(pretrained=True).eval()
+            weights = MaskRCNN_ResNet50_FPN_V2_Weights.COCO_V1
+            return (
+                maskrcnn_resnet50_fpn_v2(weights=weights).eval(),
+                weights.transforms(),
+            )
         else:
             raise ValueError(f"Model {str(model)} not supported")

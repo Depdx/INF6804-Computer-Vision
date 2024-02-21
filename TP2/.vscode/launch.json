@@ -12,8 +12,9 @@
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": [
-                "batch_size=4",
-                "segmentation_method=instance_segmentation"
+                "batch_size=2",
+                "segmentation_method=instance_segmentation",
+                "segmentation_method.model=maskrcnn_resnet50_fpn_v2",
             ]
         }
     ]

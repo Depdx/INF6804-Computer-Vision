@@ -1,4 +1,5 @@
 name: instance_segmentation
 model: maskrcnn_resnet50_fpn
-threshold: 0.9
+threshold: 0.5
+mask_threshold: 0.5
 device: cuda

@@ -80,6 +80,10 @@ class Experiment:
             for images, ground_truths, image_ids in tqdm(
                 video_dataloader, desc="Segmenting", leave=False
             ):
+                image_min_range = 655
+                image_max_range = 670
+                if image_ids.min() < image_min_range:
+                    continue
                 ground_truths: torch.Tensor
                 images: torch.Tensor
                 ground_truths = ground_truths.squeeze(dim=-3)
@@ -96,8 +100,11 @@ class Experiment:
                     ground_truths=ground_truths,
                     image_ids=image_ids,
                 )
+                if image_ids.min() > image_max_range:
+                    break
             self.log_metrics(test_video_dataset.name)
             self.confusion_matrix.reset()
+            break
 
     def log_metrics(self, video_dataset_name: str):
         """
