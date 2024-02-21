@@ -29,8 +29,7 @@ poetry env use venv/Scripts/python.exe
 ## Install Dependencies
 
 ```bash
-poetry install
-poe install-pytorch
+poetry install && poe install-pytorch && poe install-torchvision
 ```
 
 ## Add Dependencies
