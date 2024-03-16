@@ -40,16 +40,10 @@ class InstanceSegmentation(SegmentationMethod):
         self.config = config
         self.model, self.images_transform = self._get_model(config.model)
         self.model = self.model.to(device=self.config.device)
-        self.coco_labels = [
-            0,  # Person
-            1,  # Bicycle
-            2,  # Car
-            3,  # Motorcycle
-            5,  # Bus
-            7,  # Truck
-        ]
+        self.coco_labels = None
 
     def fit(self, train_dataset: VideoDataset) -> None:
+        self.coco_labels = train_dataset.coco_labels
         return super().fit(train_dataset)
 
     def __call__(self, images: Tensor) -> Tensor:

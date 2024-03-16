@@ -11,6 +11,26 @@ class VideoDataset(torch.utils.data.Dataset):
         self.name = os.path.basename(path)
         self.start = start
         self.end = end
+        self.coco_labels = []
+        if "highway" in self.name:
+            self.coco_labels = [
+                2,  # Car
+                4,  # Motorcycle
+                6,  # Bus
+                8,  # Truck
+            ]
+        if "office" in self.name:
+            self.coco_labels = [
+                1,  # Person
+            ]
+        if "pedestrians" in self.name:
+            self.coco_labels = [
+                1,  # Person
+            ]
+        if "PETS2006" in self.name:
+            self.coco_labels = [
+                1,  # Person
+            ]
 
     def __len__(self) -> int:
         return self.end - self.start

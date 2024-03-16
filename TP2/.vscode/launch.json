@@ -14,7 +14,9 @@
             "args": [
                 "batch_size=2",
                 "segmentation_method=instance_segmentation",
-                "segmentation_method.model=maskrcnn_resnet50_fpn_v2",
+                "segmentation_method.model=maskrcnn_resnet50_fpn",
+                "segmentation_method.mask_threshold=0.5",
+                "segmentation_method.threshold=0.8"
             ]
         }
     ]
