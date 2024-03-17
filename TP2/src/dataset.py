@@ -22,6 +22,7 @@ class VideoDataset(torch.utils.data.Dataset):
         if "office" in self.name:
             self.coco_labels = [
                 1,  # Person
+                84,  # Book
             ]
         if "pedestrians" in self.name:
             self.coco_labels = [
