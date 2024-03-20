@@ -1,18 +1,21 @@
 {
 	"folders": [
-        {
-            "path": "."
-        },
-        {
-            "path": "TP1"
-        },
-        {
-            "path": "TP2"
-        },
-        {
-            "path": "Oral"
-        }
-    ],
+    {
+      "path": "."
+    },
+    {
+      "path": "TP1"
+    },
+    {
+      "path": "TP2"
+    },
+    {
+      "path": "TP3"
+    },
+    {
+      "path": "Oral"
+    }
+  ],
     "settings": {
         "cSpell.words": [
             "arange",
