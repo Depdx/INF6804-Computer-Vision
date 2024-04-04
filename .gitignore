@@ -1,5 +1,7 @@
 TP3/ByteTrack/
 TP3/ByteTrack/datasets/MOT20
+TP3/content
+TP3/runs
 wandb/
 outputs/
 multirun/
