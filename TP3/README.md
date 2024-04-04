@@ -19,6 +19,12 @@
 - [Python 3.12](https://www.python.org/downloads/windows/)
 - [Poetry](https://python-poetry.org/docs/#installation)
 
+### Start docker container
+
+```bash
+docker run --gpus=all -p 127.0.0.1:9060:8080 us-docker.pkg.dev/colab-images/public/runtime
+```
+
 ### Create The virtual environment
 
 ```bash
